@@ -5,6 +5,7 @@ fic.close()
 class Monkey():
 
     monkeys = []
+    multiplier = 1
 
     def __init__(self,number,items,operation,test,true_do,false_do):
         self.number = int(number)
@@ -16,12 +17,13 @@ class Monkey():
         self.inspects = 0
 
         Monkey.monkeys.append(self)
+        Monkey.multiplier *= self.test
     
-    def treat_items (self):
+    def treat_items (self,partie2=False,verbose=False):
         while len(self.items)!=0:
             self.inspects += 1
             item = self.items.pop(0)
-            #print('    Monkey inspects an item with a worry level of '+str(item))
+            if verbose: print('    Monkey inspects an item with a worry level of '+str(item))
             secondterme = self.operation[-1]
             if(not secondterme.isdigit()):
                 secondterme = item
@@ -29,20 +31,24 @@ class Monkey():
                 secondterme = int(secondterme)    
             if(self.operation[0]=='+'):
                 item = item+secondterme
-                #print('        Worry level increases by '+str(secondterme)+' to '+str(item))
+                if verbose: print('        Worry level increases by '+str(secondterme)+' to '+str(item))
             if(self.operation[0]=='*'):
                 item = item*secondterme
-                #print('        Worry level is multiplied by '+str(secondterme)+' to '+str(item))
-            item = item // 3
-            #print('        Monkey gets bored with item. Worry level is divided by 3 to ' + str(item))
+                if verbose: print('        Worry level is multiplied by '+str(secondterme)+' to '+str(item))
+            if(not partie2):
+                item = item // 3
+                if verbose: print('        Monkey gets bored with item. Worry level is divided by 3 to ' + str(item))
+            else:
+                item = item%Monkey.multiplier
+                if verbose: print('        Monkey gets bored with item. Worry level is congruated by '+str(Monkey.multiplier)+' to ' + str(item))
             if(item%self.test==0):
                 Monkey.monkeys[self.true_do].items.append(item)
-                #print('        Current worry level is divisible by '+str(self.test))
-                #print('        Item with worry level '+str(item)+'is thrown to monkey '+str(self.true_do))
+                if verbose: print('        Current worry level is divisible by '+str(self.test))
+                if verbose: print('        Item with worry level '+str(item)+'is thrown to monkey '+str(self.true_do))
             else:
                 Monkey.monkeys[self.false_do].items.append(item)
-                #print('        Current worry level is not divisible by '+str(self.test))
-                #print('        Item with worry level '+str(item)+' is thrown to monkey '+str(self.false_do))
+                if verbose: print('        Current worry level is not divisible by '+str(self.test))
+                if verbose: print('        Item with worry level '+str(item)+' is thrown to monkey '+str(self.false_do))
 
 
 # i%7=0 : Monkey 0:
@@ -78,11 +84,10 @@ for i,line in enumerate(lines):
         false_do = a[-1]
         Monkey(number,items,operation,test,true_do,false_do)
 
-for i in range(20):
+for i in range(10000):
     for monkey in Monkey.monkeys :
         #print('Monkey '+str(monkey.number)+':')
-        monkey.treat_items()
-    print(str(i)+'\\10000')
+        monkey.treat_items(partie2=True,verbose=False)
 
 print([m.inspects for m in Monkey.monkeys])
 
