@@ -1,9 +1,11 @@
 fic = open('input.txt','r')
 lines = fic.readlines()
 fic.close()
-fic_out = open('solve.out','w')
 
 import numpy as np
+
+partie1 = False
+partie2 = not partie1
 
 class Beacon:
     beacons = []
@@ -62,21 +64,40 @@ for line in lines:
     beac = Beacon(x2,y2)
     sens = Sensor(x1,y1,beac,abs(x2-x1)+abs(y2-y1))
 
-yc = 2000000
+if partie1 : 
+    yc = 2000000
 
-for i,s in enumerate(Sensor.sensors):
-    diffy = abs(s.y-yc)
-    if diffy>s.distance : 
-        pass
-    else:
-        interv = Interval(s.x-s.distance+diffy,s.x+s.distance-diffy)
-        interv.getgud()
+    for i,s in enumerate(Sensor.sensors):
+        diffy = abs(s.y-yc)
+        if diffy>s.distance : 
+            pass
+        else:
+            interv = Interval(s.x-s.distance+diffy,s.x+s.distance-diffy)
+            interv.getgud()
 
-number_beacs = 0
-for beac in Beacon.beacons:
-    if beac.y == yc :
-        number_beacs += 1
+    number_beacs = 0
+    for beac in Beacon.beacons:
+        if beac.y == yc :
+            number_beacs += 1
 
-for i in Interval.intervals:
-    print('Interval final')
-    print(i.xmi,i.xma,(i.xma-i.xmi+1),number_beacs,(i.xma-i.xmi+1)-number_beacs)
+    for i in Interval.intervals:
+        print('Interval final')
+        print(i.xmi,i.xma,(i.xma-i.xmi+1),number_beacs,(i.xma-i.xmi+1)-number_beacs)
+
+elif partie2:
+    yc = 0
+    while(yc<4000000):
+        Interval.intervals = []
+        for i,s in enumerate(Sensor.sensors):
+            diffy = abs(s.y-yc)
+            if diffy>s.distance : 
+                pass
+            else:
+                interv = Interval(s.x-s.distance+diffy,s.x+s.distance-diffy)
+                interv.getgud()    
+        if(len(Interval.intervals)!=1):
+            for i in Interval.intervals:
+                print(i.xmi,i.xma,yc)
+            break
+        else:
+            yc += 1
