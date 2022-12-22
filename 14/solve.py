@@ -7,6 +7,8 @@ fic.close()
 
 fic_out = open('solve.out','w')
 
+partie2 = True
+
 # ----------------------------------------- JE TRACE ------------------------------------
 def trace():
     g = len(str(len(map)-1))
@@ -56,7 +58,15 @@ for line in treated2:
 
 print(minx,maxx,miny,maxy)
 
+if partie2:
+    maxy += 2
+    minx -= 200
+    maxx += 200
+
 map = np.array([['.']*(maxx-minx+1)]*(maxy-miny+1))
+
+if partie2:
+    map[maxy,:]='#'
 
 map[sourcey-miny,sourcex-minx]='+'
 
@@ -72,7 +82,7 @@ for line in treated2:
 
 # ----------------------------------------- LE SABLE TOMBE ------------------------------
 
-nb_grain = 10000
+nb_grain = 30000
 debug = False
 combien = 0
 
@@ -81,7 +91,10 @@ while(combien!=nb_grain):
 
     try : 
         pos_g_x = sourcex
-        pos_g_y = sourcey+1
+        pos_g_y = sourcey
+        if(map[pos_g_y-miny,pos_g_x-minx] == 'o') : 
+            combien -= 1
+            break
         map[pos_g_y-miny,pos_g_x-minx] = 'o'
 
         while(True):
