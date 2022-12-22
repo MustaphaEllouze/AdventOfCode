@@ -1,9 +1,13 @@
+from functools import cmp_to_key
+
 fic = open('input.txt','r')
-# fic = open('input_t.txt','r')
+#fic = open('input_t.txt','r')
 lines = [eval(line.strip()) for line in fic.readlines() if line.strip()!='']
 fic.close()
 
-lines = [[lines[2*i],lines[2*i+1]] for i in range(len(lines)//2)]
+lines_ordered = [[lines[2*i],lines[2*i+1]] for i in range(len(lines)//2)]
+
+part1 = False
 
 def compare(a,b,donotreturn=False,printeur=False,depth = 0):
     if printeur : print('  '*depth + f'Comparing {a} and {b} :')
@@ -42,22 +46,32 @@ def compare(a,b,donotreturn=False,printeur=False,depth = 0):
         test = compare(a,b,donotreturn=False,printeur=printeur,depth=depth+1)
         return test
 
-score = 0
-for i,paire in enumerate(lines):
-    print(f'--------------Paire {i}------------')
-    print(f'--------------Paire {i}------------')
-    print(f'--------------Paire {i}------------')
-    t1 = paire[0]
-    t2 = paire[1]
-    print(t1)
-    print(t2)
-    test = compare(t1,t2,printeur=True)
-    if(test==1):  
-        score += (i+1)
-        print('Right order')
-    elif(test==0):
-        raise Exception()
-    else:
-        print('Wrong order')
+if part1:
+    score = 0
+    for i,paire in enumerate(lines_ordered):
+        print(f'--------------Paire {i}------------')
+        print(f'--------------Paire {i}------------')
+        print(f'--------------Paire {i}------------')
+        t1 = paire[0]
+        t2 = paire[1]
+        print(t1)
+        print(t2)
+        test = compare(t1,t2,printeur=True)
+        if (t1!=[[2]] and t2!=[[6]]):
+            if(test==1):  
+                score += (i+1)
+                print('Right order')
+            elif(test==0):
+                raise Exception()
+            else:
+                print('Wrong order')
+    
+    print(score)
 
-print(score)
+else : 
+    lines = sorted(lines,key=cmp_to_key(compare),reverse=True)
+    a = (lines.index([[2]]))
+    b = (lines.index([[6]]))
+    for elem in lines : print(elem)
+    print(a,b)
+    print((a+1)*(b+1))
