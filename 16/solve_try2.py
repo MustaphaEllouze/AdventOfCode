@@ -1,7 +1,7 @@
 import numpy as np
 import copy
 
-fic = open('input.txt')
+fic = open('input2.txt')
 lines = fic.readlines()
 fic.close()
 
@@ -15,9 +15,12 @@ class Valve:
     valves_dict = {}
     valves_connect = {}
     names_connected = {}
+    not_zero = 0
     def __init__(self,name,flowrate,names):
         self.name = name
         self.flow = flowrate
+        if self.flow>0:
+            Valve.not_zero += 1
         self.names = names
         Valve.valves.append(self)
         Valve.valves_dict[name]=self
@@ -107,7 +110,9 @@ s = State(states)
 best_candidate = None
 best_score = -1
 
-all_states = {state:state.final_state for state in s.construct_tree(iterations=9)}
+print(Valve.not_zero)
+
+all_states = {state:state.final_state for state in s.construct_tree(iterations=5)}
 
 sorted_states = sorted(all_states.items(),key= lambda item:item[1],reverse=True)
 
